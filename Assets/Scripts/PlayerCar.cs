@@ -37,9 +37,12 @@ public class PlayerCar : MonoBehaviour
 
     private void FixedUpdate()
     {
+
+        float speed = _rigidBody.velocity.magnitude / 1000;
+
         float accelerationInput = acceleration * (Input.GetMouseButton(0) ? 1 : Input.GetMouseButton(1) ? -1 : 0) * Time.fixedDeltaTime;
         _rigidBody.AddRelativeForce(Vector3.forward * accelerationInput);
 
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, turnSpeed * Time.fixedDeltaTime);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, turnSpeed * Mathf.Clamp(speed, -1, 1) * Time.fixedDeltaTime);
     }
 }
