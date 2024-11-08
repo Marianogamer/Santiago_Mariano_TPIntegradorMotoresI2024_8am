@@ -16,16 +16,13 @@ public class CheckPoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        print("Trigger");
-        var Collided = other.GetComponent<PlayerCar>();
+        
+        var collided = other.GetComponent<PlayerCar>();
 
-        if (Collided = null)
-        {
+        if (collided = null)
             return;
-        }
-
-        print("here");
 
         checkPointControl.CheckpointReached(this);
+        
     }
 }

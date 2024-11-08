@@ -6,31 +6,32 @@ using UnityEngine.UI;
 
 public class CheckPointControl : MonoBehaviour
 {
-    CheckPoint[] checkPoints;
+    CheckPoint[] checkpoints;
     CheckPoint nextCheckPoint;
 
     int checkPointsReached;
     float lapStartTime;
-    float fastestLap;
+    float fastestLapTime;
 
-    [SerializeField] Text lapTimeText;
+    [SerializeField] Text LapTimeText;
     [SerializeField] Text fastestLapTimeText;
 
     void Start()
     {
-        checkPoints = GetComponentsInChildren<CheckPoint>();
+        checkpoints = GetComponentsInChildren<CheckPoint>();
         StartLap();
     }
 
     void UpdateFastestLapTime(float time)
     {
-        fastestLap = time;
-        fastestLapTimeText.text = FormatTime(fastestLap);
+        fastestLapTime = time;
+        fastestLapTimeText.text = FormatTime(fastestLapTime);
     }
 
     void Update()
     {
-        lapTimeText.text = FormatTime(Time.time - lapStartTime);
+        LapTimeText.text = FormatTime(Time.time - lapStartTime);
+        
     }
 
     string FormatTime(float time)
@@ -45,7 +46,7 @@ public class CheckPointControl : MonoBehaviour
 
         print(lapTime);
 
-        if (lapTime < fastestLap || fastestLap == 0)
+        if (lapTime < fastestLapTime || fastestLapTime == 0)
         {
             UpdateFastestLapTime(lapTime);
         }
@@ -57,28 +58,30 @@ public class CheckPointControl : MonoBehaviour
     {
         lapStartTime = Time.time;
         checkPointsReached = 1;
-        nextCheckPoint = checkPoints[checkPointsReached];
+        nextCheckPoint = checkpoints[checkPointsReached];
     }
 
-    internal void CheckpointReached(CheckPoint checkPoint)
+    internal void CheckpointReached(CheckPoint checkpoint)
     {
-        if (nextCheckPoint != checkPoint)
+        if (nextCheckPoint != checkpoint)
             return;
 
         print("Checkpoint");
 
         checkPointsReached++;
 
-        if (checkPointsReached == checkPoints.Length)
+
+        if (checkpoint.IsStartFinish)
+        {
+            EndLap();
+            return;
+        }
+
+        if (checkPointsReached == checkpoints.Length)
         {
             checkPointsReached = 0;
         }
 
-        if (checkPoint.IsStartFinish)
-        {
-            return;
-        }
-
-        nextCheckPoint = checkPoints[checkPointsReached];
+        nextCheckPoint = checkpoints[checkPointsReached];
     }
 }
